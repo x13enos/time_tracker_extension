@@ -1,0 +1,15 @@
+login: &login
+  username: postgres
+  password:
+  adapter: postgresql
+  encoding: unicode
+
+development:
+  <<: *login
+  database: time_tracker_extension_development
+  host: localhost 
+
+test:
+  <<: *login
+  database: time_tracker_extension_test
+  host: localhost
