@@ -28,4 +28,16 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rails", "~> 5.2.2"
 
   spec.add_development_dependency "pg"
+  spec.add_development_dependency "jbuilder"
+  spec.add_development_dependency "pundit"
+
+  spec.add_development_dependency "database_cleaner"
+  spec.add_development_dependency "factory_bot_rails"
+  spec.add_development_dependency "faker"
+  spec.add_development_dependency "rspec-rails"
+  spec.add_development_dependency "shoulda-matchers"
+  spec.add_development_dependency "pundit-matchers"
+  spec.add_development_dependency "rspec_junit_formatter"
+  spec.add_development_dependency "bcrypt"
+  spec.add_dependency "pry-rails"
 end
