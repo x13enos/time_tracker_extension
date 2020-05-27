@@ -1,0 +1,3 @@
+en:
+  time_locking_rules:
+    user_does_not_have_access_to_workspace: "User doesn't have access to that workspace"
