@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_24_123118) do
+ActiveRecord::Schema.define(version: 2020_05_27_170005) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,17 @@ ActiveRecord::Schema.define(version: 2020_05_24_123118) do
     t.date "assigned_date"
   end
 
+  create_table "time_tracker_extension_time_locking_periods", force: :cascade do |t|
+    t.integer "workspace_id"
+    t.integer "user_id"
+    t.date "beginning_of_period"
+    t.date "end_of_period"
+    t.boolean "approved", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workspace_id", "user_id"], name: "locking_period_workspace_and_user_index"
+  end
+
   create_table "time_tracker_extension_time_locking_rules", force: :cascade do |t|
     t.integer "workspace_id"
     t.integer "period"
@@ -87,4 +98,3 @@ ActiveRecord::Schema.define(version: 2020_05_24_123118) do
   end
 
 end
-

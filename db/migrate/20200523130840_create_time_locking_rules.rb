@@ -1,4 +1,4 @@
-class CreateTimeTrackerExtensionTimeLockingRules < ActiveRecord::Migration[5.2]
+class CreateTimeLockingRules < ActiveRecord::Migration[5.2]
   def change
     create_table :time_tracker_extension_time_locking_rules do |t|
       t.integer :workspace_id
