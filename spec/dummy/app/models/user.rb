@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include TimeTrackerExtension::UserExtension
+
   SUPPORTED_LANGUAGES = %w(en ru)
   has_secure_password validations: false
 
