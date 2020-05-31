@@ -3,3 +3,6 @@ en:
     approve_your_timereport: "Have you filled your timereport?"
   time_locking_rules:
     user_does_not_have_access_to_workspace: "User doesn't have access to that workspace"
+  time_records:
+    errors:
+      cannot_execute_for_blocked_days: "You can't do that because this day was blocked for changes."
