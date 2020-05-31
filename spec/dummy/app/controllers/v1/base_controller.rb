@@ -4,6 +4,12 @@ class V1::BaseController < ApplicationController
   before_action :authenticate
   after_action :set_token
 
+  def current_workspace_id
+    @current_workspace_id ||= if current_user
+      current_user.active_workspace_id
+    end
+  end
+
   private
 
   def authenticate

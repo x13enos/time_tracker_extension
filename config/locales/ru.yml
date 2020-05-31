@@ -3,3 +3,6 @@ ru:
     approve_your_timereport: "Вы уже заполнили свой отчет?"
   time_locking_rules:
      user_does_not_have_access_to_workspace: "У вас нет доступа к выбранному рабочему пространству"
+  time_records:
+    errors:
+      cannot_execute_for_blocked_days: "Вы не можете вносить изменения в уже подтвержденный день."
