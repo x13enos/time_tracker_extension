@@ -8,7 +8,6 @@ module TimeTrackerExtension
 
     def perform
       periods = get_approved_locking_periods
-      return [] unless periods.any?
       find_blocked_days(periods)
     end
 

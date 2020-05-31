@@ -5,11 +5,11 @@ module TimeTrackerExtension
       def self.included(klass)
         klass.class_eval do
 
-          validate :cannot_execute_for_blocked_days
+          validate :assigned_date_should_not_be_blocked
 
           private
 
-          def cannot_execute_for_blocked_days
+          def assigned_date_should_not_be_blocked
             blocked_days = self.user.time_locking_periods.where(
               "workspace_id = :workspace_id AND approved = true AND (beginning_of_period <= :assigned_date AND end_of_period >= :assigned_date)",
               {

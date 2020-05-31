@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe TimeRecords::BaseForm, type: :model do
 
   context 'validations' do
-    describe "#cannot_execute_for_blocked_days" do
+    describe "#assigned_date_should_not_be_blocked" do
       let!(:user) { create(:user) }
       let!(:project) { create(:project, workspace: user.active_workspace) }
       let!(:time_record_form) {
