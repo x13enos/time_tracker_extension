@@ -5,60 +5,88 @@ module TimeTrackerExtension
     routes { TimeTrackerExtension::Engine.routes }
 
     describe "PUT #update" do
-      let!(:user) { create(:user) }
-      let!(:workspace) { create(:workspace) }
-      let!(:period) { create(:time_locking_period, user: user, workspace: workspace)  }
-      let(:request_params) { {
-        token: "22222222",
-        workspace_id: workspace.id,
-        id: period.id,
-        format: :json
-      } }
 
-      context "user was found by decoded token" do
-        before do
-          allow(TokenCryptService).to receive(:decode).with("22222222") { user.email }
+      context "approve via email" do
+        let!(:user) { create(:user) }
+        let!(:workspace) { create(:workspace) }
+        let!(:period) { create(:time_locking_period, user: user, workspace: workspace)  }
+        let(:request_params) { {
+          token: "22222222",
+          workspace_id: workspace.id,
+          id: period.id,
+          format: :json
+        } }
+
+        context "user was found by decoded token" do
+          before do
+            allow(TokenCryptService).to receive(:decode).with("22222222") { user.email }
+          end
+
+          it "should try to search user by decoded email" do
+            expect(User).to receive(:find_by).with({ email: user.email }) { user }
+            put :update, params: request_params
+          end
+
+          it "should approve time locking period" do
+            allow(User).to receive(:find_by) { user }
+            put :update, params: request_params
+            expect(period.reload.approved).to be_truthy
+          end
+
+          it "should return 200 status" do
+            allow(User).to receive(:find_by) { user }
+            put :update, params: request_params
+            expect(response.status).to eq(200)
+          end
+
+          it "should return 400 status if period wasn't approved" do
+            allow(User).to receive(:find_by) { user }
+            allow(user).to receive_message_chain(:time_locking_periods, :where, :find) { period  }
+            allow(period).to receive(:update) { false }
+            put :update, params: request_params
+            expect(response.status).to eq(400)
+          end
+
+          it "should return error message if period wasn't approved" do
+            allow(User).to receive(:find_by) { user }
+            allow(user).to receive_message_chain(:time_locking_periods, :where, :find) { period  }
+            allow(period).to receive(:update) { false }
+            period.errors.add(:base, "error")
+            put :update, params: request_params
+            expect(response.body).to eq({ errors: { base: ["error"] } }.to_json)
+          end
         end
 
-        it "should try to search user by decoded email" do
-          expect(User).to receive(:find_by).with({ email: user.email }) { user }
+        it "should return error message if token was expired" do
+          allow(TokenCryptService).to receive(:decode).with("22222222") { nil }
           put :update, params: request_params
-        end
-
-        it "should approve time locking period" do
-          allow(User).to receive(:find_by) { user }
-          put :update, params: request_params
-          expect(period.reload.approved).to be_truthy
-        end
-
-        it "should return 200 status" do
-          allow(User).to receive(:find_by) { user }
-          put :update, params: request_params
-          expect(response.status).to eq(200)
-        end
-
-        it "should return 400 status if period wasn't approved" do
-          allow(User).to receive(:find_by) { user }
-          allow(user).to receive_message_chain(:time_locking_periods, :where, :find) { period  }
-          allow(period).to receive(:update) { false }
-          put :update, params: request_params
-          expect(response.status).to eq(400)
-        end
-
-        it "should return error message if period wasn't approved" do
-          allow(User).to receive(:find_by) { user }
-          allow(user).to receive_message_chain(:time_locking_periods, :where, :find) { period  }
-          allow(period).to receive(:update) { false }
-          period.errors.add(:base, "error")
-          put :update, params: request_params
-          expect(response.body).to eq({ errors: { base: ["error"] } }.to_json)
+          expect(response.body).to eq({ errors: { base: I18n.t("time_locking_periods.invalid_token") } }.to_json)
         end
       end
 
-      it "should return error message if token was expired" do
-        allow(TokenCryptService).to receive(:decode).with("22222222") { nil }
-        put :update, params: request_params
-        expect(response.body).to eq({ errors: { base: I18n.t("time_locking_periods.invalid_token") } }.to_json)
+      context "approve via UI" do
+        login_staff
+        let!(:period) { create(:time_locking_period, approved: false, user: @current_user, workspace_id: @current_user.active_workspace_id)  }
+
+        let(:request_params) { {
+          id: period.id,
+          format: :json
+        } }
+
+        before do
+          cookies['token'] = '33333333'
+          allow(TokenCryptService).to receive(:decode).with("33333333") { @current_user.email }
+        end
+
+        it "should try to search user by decoded email" do
+          expect(User).to receive(:find_by).with({ email: @current_user.email }) { @current_user }
+          put :update, params: request_params
+        end
+
+        it "should find period and approve it " do
+          put :update, params: request_params
+          expect(period.reload.approved).to be_truthy
+        end
       end
     end
   end
