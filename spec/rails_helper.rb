@@ -1,17 +1,18 @@
 ENV['RAILS_ENV'] ||= 'test'
-# require File.expand_path('../../config/environment', __FILE__)
 require File.expand_path("../dummy/config/environment.rb", __FILE__)
+require 'factory_bot_rails'
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+
+require 'telegram/bot'
+require 'telegram/bot/types'
 require 'spec_helper'
 require 'rspec/rails'
-require 'factory_bot_rails'
 require 'database_cleaner'
 require 'faker'
 require 'pry'
 require 'shoulda/matchers'
 require 'pundit/rspec'
 require 'pundit/matchers'
-
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 ActiveRecord::Migration.maintain_test_schema!
 
@@ -32,6 +33,7 @@ RSpec.configure do |config|
 
   config.render_views = true
 
+  config.after { Telegram.bot.reset }
 
   config.include(Shoulda::Matchers::ActiveModel, type: :model)
   config.include(Shoulda::Matchers::ActiveRecord, type: :model)

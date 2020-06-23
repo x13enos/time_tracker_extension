@@ -5,7 +5,7 @@ module TimeTrackerExtension
 
     def index
       if current_user
-        render 'time_tracker_extension/v1/auth/index.json.jbuilder', locals: {
+        render partial: 'time_tracker_extension/v1/users/show.json.jbuilder', locals: {
           user: current_user,
           unapproved_periods: select_pending_periods
         }

@@ -12,4 +12,16 @@ namespace :time_tracker_extension do
     TimeTrackerExtension::TimeLockingPeriodsChecker.execute
     puts "Task was finished for #{ (Time.now - time).round } seconds"
   end
+
+  desc 'Run poller. It broadcasts Rails.logger to STDOUT in dev like `rails s` do. ' \
+    'Use LOG_TO_STDOUT to enable/disable broadcasting.'
+  task :telegram_bot_poller do
+    ENV['BOT_POLLER_MODE'] = 'true'
+    Rake::Task['environment'].invoke
+    if ENV.fetch('LOG_TO_STDOUT') { Rails.env.development? }.present?
+      console = ActiveSupport::Logger.new(STDERR)
+      Rails.logger.extend ActiveSupport::Logger.broadcast console
+    end
+    Telegram::Bot::UpdatesPoller.start(ENV['BOT'].try!(:to_sym) || :default)
+  end
 end

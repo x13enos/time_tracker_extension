@@ -9,6 +9,7 @@ module TimeTrackerExtension
 
     context "associations" do
       it { should belong_to(:workspace)  }
+      it { should have_many(:users).through(:workspace)  }
     end
   end
 end

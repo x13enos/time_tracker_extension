@@ -1,4 +1,5 @@
 TimeTrackerExtension::Engine.routes.draw do
+  telegram_webhook TimeTrackerExtension::TelegramController
 
   namespace :v1 do
     resources :auth, only: :index

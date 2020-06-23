@@ -6,3 +6,12 @@ en:
   time_records:
     errors:
       cannot_execute_for_blocked_days: "You can't do that because this day was blocked for changes."
+  telegram:
+    please_set_your_token: "Hello! I'm your assistant bot. Please, set the Telegram token from your profile for linking your Time Tracker account with the Telegram."
+    telegram_was_assigned_to_account: "Thanks! Your Telegram account was linked with the Time Tracker"
+    token_is_invalid: "Sorry, this token is invalid, please try another one from your Time Tracker profile."
+    this_account_was_linked: "Sorry, this Telegram account was already linked with to Time Tracker user."
+    approve_period: "Approve Period"
+    please_approve_period: "Please approve that you have filled your timereport for period %{from} - %{to}"
+    period_was_succesfully_approved: "Timereport for period %{from} - %{to} was successfully approved ✅"
+    done: "Done!"

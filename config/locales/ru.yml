@@ -6,3 +6,12 @@ ru:
   time_records:
     errors:
       cannot_execute_for_blocked_days: "Вы не можете вносить изменения в уже подтвержденный день."
+  telegram:
+    please_set_your_token: "Приветствую! Я - бот, который, будет помогать вам взаимодействовать с Time Tracker. Укажите пожалуйста ваш Телеграм токен для того, чтобы мы могли связать вашу учетную запись в Телеграме с Time Tracker. Токен можно найти в профиле."
+    telegram_was_assigned_to_account: "Спасибо! Теперь ваш Телеграм аккаунт связан с Time Tracker"
+    token_is_invalid: "Упс, этот токен не подходит, пожалуйста попробуйте тот, что указан в вашем Time Tracker профиле."
+    this_account_was_linked: "К сожалению, этот Телеграм аккаунт был привязан к другой учетной записи на Time Tracker."
+    approve_period: "Подтвердить отчет"
+    please_approve_period: "Пожалуйста, подтвердите что вы заполнили отчет за период %{from} - %{to}"
+    period_was_succesfully_approved: "Отчет за период %{from} - %{to} был подтвержден ✅"
+    done: "Готово!"
