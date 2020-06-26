@@ -53,6 +53,8 @@ module TimeTrackerExtension
             role: @current_user.role,
             locale: @current_user.locale,
             active_workspace_id: @current_user.active_workspace_id,
+            telegram_token: @current_user.telegram_token,
+            telegram_active: @current_user.telegram_id.present?,
             unapproved_periods: [{
               id: period.id,
               from: period.beginning_of_period.strftime("%d/%m/%Y"),

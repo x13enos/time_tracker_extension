@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_27_170005) do
+ActiveRecord::Schema.define(version: 2020_06_18_101401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,6 +82,10 @@ ActiveRecord::Schema.define(version: 2020_05_27_170005) do
     t.integer "role"
     t.string "locale", default: "en"
     t.integer "active_workspace_id"
+    t.string "telegram_token"
+    t.integer "telegram_id"
+    t.index ["telegram_id"], name: "index_users_on_telegram_id", unique: true
+    t.index ["telegram_token"], name: "index_users_on_telegram_token", unique: true
   end
 
   create_table "users_workspaces", id: false, force: :cascade do |t|
