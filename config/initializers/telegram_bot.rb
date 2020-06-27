@@ -9,3 +9,5 @@ end
 Telegram.bots_config = {
   default: ENV["TELEGRAM_BOT_TOKEN"]
 }
+
+TimeTrackerExtension::Engine.routes.default_url_options = { host: ENV["SMTP_DOMAIN"], protocol: 'https' }
