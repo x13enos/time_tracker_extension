@@ -39,8 +39,14 @@ module TimeTrackerExtension
       end
 
       context "for invalid token" do
+        let(:current_user) { create(:user) }
         subject { -> { dispatch_command :check_token, 'token' } }
         it { should respond_with_message I18n.t("telegram.token_is_invalid") }
+
+        it "should set the right context" do
+          expect_any_instance_of(TimeTrackerExtension::TelegramController).to receive(:save_context).with(:check_token!)
+          dispatch_command(:check_token, 'token', { from: { id: 3 } } )
+        end
       end
 
     end
