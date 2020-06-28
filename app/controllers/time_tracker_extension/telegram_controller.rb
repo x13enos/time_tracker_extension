@@ -19,7 +19,7 @@ module TimeTrackerExtension
       if user
         link_user_account(user)
       else
-        save_context(:set_token!)
+        save_context(:check_token!)
         respond_with :message, text: t('telegram.token_is_invalid')
       end
     end

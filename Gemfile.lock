@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    time_tracker_extension (0.3.1)
+    time_tracker_extension (0.3.3)
       pry-rails
       rails (~> 5.2.4.3)
       telegram-bot
