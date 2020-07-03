@@ -18,6 +18,20 @@ module TimeTrackerExtension
         expect(Telegram.bot).to receive(:send_message).with(chat_id: user.telegram_id, text: 'telegram message', reply_markup: { inline_keyboard: [[button]] })
         TimeTrackerExtension::Notifiers::Telegram.new(user, { period: period }).approve_period
       end
+
+    end
+
+    describe "assign_user_to_project" do
+      let!(:project) { create(:project) }
+
+      it "should send message" do
+        project.users << user
+        allow(I18n).to receive(:t).with("telegram.you_were_assigned_to_project", project: project.name, workspace: project.workspace.name) { 'telegram message' }
+
+        expect(Telegram.bot).to receive(:send_message).with(chat_id: user.telegram_id, reply_markup: {}, text: 'telegram message')
+        TimeTrackerExtension::Notifiers::Telegram.new(user, { project: project }).assign_user_to_project
+      end
+
     end
   end
 end

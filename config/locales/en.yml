@@ -15,3 +15,4 @@ en:
     please_approve_period: "Please approve that you have filled your timereport for period %{from} - %{to}"
     period_was_succesfully_approved: "Timereport for period %{from} - %{to} was successfully approved ✅"
     done: "Done!"
+    you_were_assigned_to_project: "You were assigned to project \"%{project}\" in \"%{workspace}\"."

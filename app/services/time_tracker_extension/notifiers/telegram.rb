@@ -1,5 +1,5 @@
 module TimeTrackerExtension
-  class Notifiers::Telegram < TimeTrackerExtension::Notifiers::Base
+  class Notifiers::Telegram < ::Notifiers::Base
 
     def approve_period
       period = args[:period]
@@ -7,6 +7,13 @@ module TimeTrackerExtension
       send_message(
         I18n.t("telegram.please_approve_period", from: period.beginning_of_period, to: period.end_of_period),
         { inline_keyboard: [[button]] }
+      )
+    end
+
+    def assign_user_to_project
+      project = args[:project]
+      send_message(
+        I18n.t("telegram.you_were_assigned_to_project", project: project.name, workspace: project.workspace.name),
       )
     end
 

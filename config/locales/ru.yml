@@ -15,3 +15,4 @@ ru:
     please_approve_period: "Пожалуйста, подтвердите что вы заполнили отчет за период %{from} - %{to}"
     period_was_succesfully_approved: "Отчет за период %{from} - %{to} был подтвержден ✅"
     done: "Готово!"
+    you_were_assigned_to_project: "Вас добавили в проект \"%{project}\" в рабочем пространстве \"%{workspace}\"."

@@ -1,48 +1,39 @@
 require "rails_helper"
 
+class DummyNotifier
+  prepend TimeTrackerExtension::UserNotifier
+  def initialize(user, notification_type, args)
+    @user = user
+    @args = args
+    @notification_type = notification_type
+  end
+
+  private
+  attr_reader :user, :notification_type, :args
+
+  def notifications
+  end
+end
+
 module TimeTrackerExtension
   RSpec.describe UserNotifier do
-    let(:user) { create(:user) }
+    let!(:user) { create(:user) }
+    let!(:notifier) { DummyNotifier.new(user, :approve_period, { period: "period" }) }
 
-    describe ".initialize" do
-      let!(:notifier) { TimeTrackerExtension::UserNotifier.new(user, :approve_period, { period: "period" }) }
+    describe "notifications" do
 
-      it "should assign user to the notifier's attributes" do
-        expect(notifier.send(:user)).to eq(user)
-      end
-
-      it "should assign notification type to the notifier's attributes" do
-        expect(notifier.send(:notification_type)).to eq(:approve_period)
-      end
-
-      it "should assign additional args to the notifier's attributes" do
-        expect(notifier.send(:args)).to eq({ period: "period" })
-      end
-    end
-
-    describe "perform" do
-      let!(:notifier) { TimeTrackerExtension::UserNotifier.new(user, :approve_period, { period: "period" }) }
-
-      it "should user I18n for using user's locale during the creating of notifications" do
-        allow(TimeTrackerExtension::Notifiers::Email).to receive(:new) { double(approve_period: true) }
-        expect(I18n).to receive(:with_locale).with(user.locale, &Proc.new { notifier.send(:notifications) })
-        notifier.perform
-      end
-
-      it "should call mail notifier and use appropriated method" do
-        email_notifier = double
-        allow(TimeTrackerExtension::Notifiers::Email).to receive(:new).with(user, { period: "period" }) { email_notifier }
-        expect(email_notifier).to receive(:approve_period)
-        notifier.perform
+      it "should call method 'notify_by_email'" do
+        expect(notifier).to receive(:notify_by_email)
+        notifier.send(:notifications)
       end
 
       it "should call telegram notifier and use appropriated method if user has telegram id" do
-        allow(TimeTrackerExtension::Notifiers::Email).to receive(:new) { double(approve_period: true) }
+        allow(notifier).to receive(:notify_by_email)
         allow(user).to receive(:telegram_id) { 111 }
         telegram_notifier = double
         allow(TimeTrackerExtension::Notifiers::Telegram).to receive(:new).with(user, { period: "period" }) { telegram_notifier }
         expect(telegram_notifier).to receive(:approve_period)
-        notifier.perform
+        notifier.send(:notifications)
       end
     end
   end
