@@ -1,11 +1,22 @@
 require "rails_helper"
 
+class DummyEmailNotifier
+  include TimeTrackerExtension::Notifiers::Email
+  def initialize(user, args)
+    @user = user
+    @args = args
+  end
+
+  private
+  attr_reader :user, :args
+end
+
 module TimeTrackerExtension
   RSpec.describe Notifiers::Email do
     let(:user) { create(:user) }
 
     describe "approve_period" do
-      let!(:notifier) { TimeTrackerExtension::Notifiers::Email.new(user, { period: "period" }) }
+      let!(:notifier) { DummyEmailNotifier.new(user, { period: "period" }) }
 
       it "should build email" do
         mail = double(deliver_now: true)
