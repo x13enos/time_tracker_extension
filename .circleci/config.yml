@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/ruby:2.6.1
+      - image: circleci/ruby:2.7.1
         environment:
           RAILS_ENV: test
       - image: postgres:9.5
