@@ -19,7 +19,7 @@ module TimeTrackerExtension
 
     describe ".execute" do
       it "should build notifier" do
-        expect(TimeTrackerExtension::UserNotifier).to receive(:new)
+        expect(::UserNotifier).to receive(:new)
           .with(user, :approve_period, { period: period }) { double(perform: true)}
 
         launch_service
@@ -27,7 +27,7 @@ module TimeTrackerExtension
 
       it "should launch notifier" do
         notifier = double
-        allow(TimeTrackerExtension::UserNotifier).to receive(:new)
+        allow(::UserNotifier).to receive(:new)
           .with(user, :approve_period, { period: period }) { notifier }
         expect(notifier).to receive(:perform)
         launch_service
