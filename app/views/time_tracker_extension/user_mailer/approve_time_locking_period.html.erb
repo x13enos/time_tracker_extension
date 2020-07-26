@@ -12,7 +12,7 @@
                         <div class="greetings-block">
                             <div>
                                 <p>
-                                  <strong><span style="font-size: 36px;">Hello, <%= @user.name %>!</span></strong>
+                                  <strong><span style="font-size: 36px;"><%= I18n.t("mailers.hello_with_name", user: @user.name) %></span></strong>
                                 </p>
                             </div>
                         </div>
@@ -21,7 +21,7 @@
                         <div class="main-text-block">
                             <div>
                                 <p>
-                                <strong><span style="font-size: 22px;">Please approve that you have filled your timereport for period <%= @period.beginning_of_period.to_s %> - <%= @period.end_of_period.to_s %>.</span></strong>
+                                <strong><span style="font-size: 22px;"><%= I18n.t("mailers.please_approve_time_report", from: @period.beginning_of_period.to_s, to: @period.end_of_period.to_s, workspace: @period.workspace.name) %></span></strong>
                                 </p>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                                 <span class="link-text-wrapper">
                                   <span>
                                     <span data-mce-style="font-size: 26px; line-height: 52px;" style="font-size: 26px; line-height: 52px;">
-                                      <strong>APPROVE</strong>
+                                      <strong><%= I18n.t("mailers.approve") %></strong>
                                     </span>
                                   </span>
                                 </span>
@@ -68,4 +68,3 @@
         </div>
     </div>
 </div>
-

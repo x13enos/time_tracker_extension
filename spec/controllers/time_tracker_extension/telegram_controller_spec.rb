@@ -71,7 +71,7 @@ module TimeTrackerExtension
       end
 
       it "should change message about approving timereport" do
-        message = I18n.t('telegram.period_was_succesfully_approved', from: period.beginning_of_period, to: period.end_of_period)
+        message = I18n.t('telegram.period_was_succesfully_approved', workspace: period.workspace.name, from: period.beginning_of_period, to: period.end_of_period)
         expect_any_instance_of(TimeTrackerExtension::TelegramController).to receive(:edit_message).with("text", { text: message })
         execute_callback_query(period)
       end
