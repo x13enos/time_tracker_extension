@@ -3,6 +3,8 @@ ru:
     approve_your_timereport: "Вы уже заполнили свой отчет?"
   time_locking_rules:
      user_does_not_have_access_to_workspace: "У вас нет доступа к выбранному рабочему пространству"
+  time_locking_periods:
+    has_active_task: "Вы не можете подтвердить отчет, пока не остановите все запущенные задачи"
   time_records:
     errors:
       cannot_execute_for_blocked_days: "Вы не можете вносить изменения в уже подтвержденный день."
@@ -15,4 +17,5 @@ ru:
     please_approve_period: "Пожалуйста, подтвердите что вы заполнили отчет за период %{from} - %{to}"
     period_was_succesfully_approved: "Отчет за период %{from} - %{to} был подтвержден ✅"
     done: "Готово!"
+    error: "%{message} ❌"
     you_were_assigned_to_project: "Вас добавили в проект \"%{project}\" в рабочем пространстве \"%{workspace}\"."

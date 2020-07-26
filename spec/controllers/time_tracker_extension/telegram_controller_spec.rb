@@ -75,6 +75,16 @@ module TimeTrackerExtension
         expect_any_instance_of(TimeTrackerExtension::TelegramController).to receive(:edit_message).with("text", { text: message })
         execute_callback_query(period)
       end
+
+      it "should return error in case of invalid period" do
+        allow(User).to receive(:find_by) { current_user }
+        allow(current_user).to receive_message_chain(:time_locking_periods, :find_by) { period }
+        allow(period).to receive(:update) { false }
+        period.errors.add(:base, "error message")
+        message = I18n.t('telegram.error', message: "error message")
+        expect_any_instance_of(TimeTrackerExtension::TelegramController).to receive(:answer_callback_query).with(message)
+        execute_callback_query(period)
+      end
     end
   end
 

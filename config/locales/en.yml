@@ -3,6 +3,8 @@ en:
     approve_your_timereport: "Have you filled your timereport?"
   time_locking_rules:
     user_does_not_have_access_to_workspace: "User doesn't have access to that workspace"
+  time_locking_periods:
+    has_active_task: "You cannot approve time report until you stop launched tasks"
   time_records:
     errors:
       cannot_execute_for_blocked_days: "You can't do that because this day was blocked for changes."
@@ -15,4 +17,5 @@ en:
     please_approve_period: "Please approve that you have filled your timereport for period %{from} - %{to}"
     period_was_succesfully_approved: "Timereport for period %{from} - %{to} was successfully approved ✅"
     done: "Done!"
+    error: "%{message} ❌"
     you_were_assigned_to_project: "You were assigned to project \"%{project}\" in \"%{workspace}\"."
