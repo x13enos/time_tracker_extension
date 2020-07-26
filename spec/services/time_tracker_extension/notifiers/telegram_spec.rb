@@ -9,8 +9,8 @@ module TimeTrackerExtension
       it "should send message with 'approve' button to user" do
         allow(I18n).to receive(:t).and_call_original
 
-        period = double(id: 22, beginning_of_period: "1/01/2020", end_of_period: "7/01/2020")
-        allow(I18n).to receive(:t).with("telegram.please_approve_period", from: period.beginning_of_period, to: period.end_of_period) { 'telegram message' }
+        period = double(id: 22, beginning_of_period: "1/01/2020", end_of_period: "7/01/2020", workspace: double(name: "workspace's name"))
+        allow(I18n).to receive(:t).with("telegram.please_approve_period", workspace: "workspace's name", from: period.beginning_of_period, to: period.end_of_period) { 'telegram message' }
 
         button = double
         allow(Telegram::Bot::Types::InlineKeyboardButton).to receive(:new).with(text: I18n.t("telegram.approve_period"), callback_data: "approve_period:#{period.id}") { button }

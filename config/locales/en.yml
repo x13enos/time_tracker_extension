@@ -1,6 +1,10 @@
 en:
   mailers:
-    approve_your_timereport: "Have you filled your timereport?"
+    subjects:
+      approve_your_timereport: "Have you filled your time report?"
+    hello_with_name: "Hello %{user}!"
+    please_approve_time_report: "Please approve that you have filled your timereport for workspace \"%{workspace}\" on period %{from} - %{to}."
+    approve: "APPROVE"
   time_locking_rules:
     user_does_not_have_access_to_workspace: "User doesn't have access to that workspace"
   time_locking_periods:
@@ -14,8 +18,8 @@ en:
     token_is_invalid: "Sorry, this token is invalid, please try another one from your Time Tracker profile."
     this_account_was_linked: "Sorry, this Telegram account was already linked with to Time Tracker user."
     approve_period: "Approve Period"
-    please_approve_period: "Please approve that you have filled your timereport for period %{from} - %{to}"
-    period_was_succesfully_approved: "Timereport for period %{from} - %{to} was successfully approved ✅"
+    please_approve_period: "Please approve that you have filled your timereport for workspace \"%{workspace}\" on period %{from} - %{to}"
+    period_was_succesfully_approved: "Timereport for workspace \"%{workspace}\" on period %{from} - %{to} was successfully approved ✅"
     done: "Done!"
     error: "%{message} ❌"
     you_were_assigned_to_project: "You were assigned to project \"%{project}\" in \"%{workspace}\"."
