@@ -29,6 +29,8 @@ module TimeTrackerExtension
       if period.update(approved: true)
         answer_callback_query(t('telegram.done'))
         edit_message("text", { text: t('telegram.period_was_succesfully_approved', workspace: period.workspace.name, from: period.beginning_of_period, to: period.end_of_period) })
+      else
+        answer_callback_query(t('telegram.error', message: period.errors[:base].join(', '))) 
       end
     end
 
