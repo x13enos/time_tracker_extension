@@ -5,11 +5,12 @@ module TimeTrackerExtension
 
     def notifications
       notify_by_email
-      notify_by_telegram if user.telegram_id
+      notify_by_telegram
     end
 
     def notify_by_telegram
-      TimeTrackerExtension::Notifiers::Telegram.new(user, args).send(notification_type)
+      return unless user.telegram_id
+      send_notification(TimeTrackerExtension::Notifiers::Telegram)
     end
   end
 end

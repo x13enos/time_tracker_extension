@@ -13,6 +13,9 @@ class DummyNotifier
 
   def notifications
   end
+
+  def send_notification(notification_class)
+  end
 end
 
 module TimeTrackerExtension
@@ -27,12 +30,10 @@ module TimeTrackerExtension
         notifier.send(:notifications)
       end
 
-      it "should call telegram notifier and use appropriated method if user has telegram id" do
+      it "should call method send_notification and pass telegram notifier class if user has telegram id" do
         allow(notifier).to receive(:notify_by_email)
         allow(user).to receive(:telegram_id) { 111 }
-        telegram_notifier = double
-        allow(TimeTrackerExtension::Notifiers::Telegram).to receive(:new).with(user, { period: "period" }) { telegram_notifier }
-        expect(telegram_notifier).to receive(:approve_period)
+        expect(notifier).to receive(:send_notification).with(TimeTrackerExtension::Notifiers::Telegram)
         notifier.send(:notifications)
       end
     end

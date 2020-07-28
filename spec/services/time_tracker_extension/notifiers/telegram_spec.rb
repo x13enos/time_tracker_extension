@@ -33,5 +33,32 @@ module TimeTrackerExtension
       end
 
     end
+
+    describe "daily_report" do
+      let!(:report_data) do
+        {
+          workspace_name: "random workspace",
+          user: user,
+          users_data: {
+            "1": {
+              name: "John",
+              tasks_count: 1,
+              total_time: 2.15
+            }
+          }
+        }
+      end
+
+      it "should send message" do
+        I18n.t("telegram.daily_report.body", user_name: user.name, workspace: report_data[:workspace_name])
+        allow(I18n).to receive(:t).with("telegram.daily_report.body", user_name: user.name, workspace: "random workspace") { 'body/' }
+        allow(I18n).to receive(:t).with("telegram.daily_report.user_data", index: 1, name: "John", count: 1, time: 2.15) { 'user_data/' }
+        allow(I18n).to receive(:t).with("telegram.daily_report.footer") { 'footer' }
+
+        expect(Telegram.bot).to receive(:send_message).with(chat_id: user.telegram_id, reply_markup: {}, text: 'body/user_data/footer')
+        TimeTrackerExtension::Notifiers::Telegram.new(user, { report_data: report_data }).daily_report
+      end
+
+    end
   end
 end

@@ -23,3 +23,10 @@ en:
     done: "Done!"
     error: "%{message} ❌"
     you_were_assigned_to_project: "You were assigned to project \"%{project}\" in \"%{workspace}\"."
+    daily_report:
+      body: "Good morning, %{user_name}! 👋\n\nHere is statistic of workspace \"%{workspace}\" by users for yesterday:\n\n"
+      user_data:
+        zero: "%{index}. %{name} - no tasks\n"
+        one: "%{index}. %{name} - 1 task %{time}h\n"
+        other: "%{index}. %{name} - %{count} tasks, total time: %{time}h\n"
+      footer: "\nHave a good day! ☀️"

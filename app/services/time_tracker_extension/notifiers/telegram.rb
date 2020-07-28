@@ -17,6 +17,16 @@ module TimeTrackerExtension
       )
     end
 
+    def daily_report
+      report_data = args[:report_data]
+      message = I18n.t("telegram.daily_report.body", user_name: user.name, workspace: report_data[:workspace_name])
+      report_data[:users_data].each_with_index do |(id, u), index|
+        message << I18n.t('telegram.daily_report.user_data', index: index+1, name: u[:name], count: u[:tasks_count], time: u[:total_time])
+      end
+      message << I18n.t("telegram.daily_report.footer")
+      send_message(message)
+    end
+
     private
 
     def send_message(text, markup = {})

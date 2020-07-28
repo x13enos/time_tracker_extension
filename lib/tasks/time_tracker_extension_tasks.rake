@@ -13,6 +13,13 @@ namespace :time_tracker_extension do
     puts "Task was finished for #{ (Time.now - time).round } seconds"
   end
 
+  desc "send_daily reports to admins"
+  task send_daily_reports: :environment do
+    time = Time.now
+    TimeTrackerExtension::DailyReportsSender.execute
+    puts "Task was finished for #{ (Time.now - time).round } seconds"
+  end
+
   desc 'Run poller. It broadcasts Rails.logger to STDOUT in dev like `rails s` do. ' \
     'Use LOG_TO_STDOUT to enable/disable broadcasting.'
   task telegram_bot_poller: :environment do
