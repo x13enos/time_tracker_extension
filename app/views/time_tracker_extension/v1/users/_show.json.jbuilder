@@ -6,3 +6,5 @@ json.unapproved_periods user.unapproved_periods do |period|
   json.from period.beginning_of_period.strftime("%d/%m/%Y")
   json.to period.end_of_period.strftime("%d/%m/%Y")
 end
+
+json.notification_settings user.notification_settings.rules
