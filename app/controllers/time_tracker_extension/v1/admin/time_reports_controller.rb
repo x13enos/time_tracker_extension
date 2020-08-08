@@ -4,7 +4,7 @@ module TimeTrackerExtension
     before_action :authorize_action
 
     def index
-      @periods = user_time_reports.order(end_of_period: :desc).limit(10)
+      @periods = user_time_reports.where("end_of_period < ?", Date.today).order(end_of_period: :desc).limit(10)
     end
 
     def update
