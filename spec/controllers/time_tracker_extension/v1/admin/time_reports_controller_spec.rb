@@ -6,15 +6,16 @@ module TimeTrackerExtension
     login_admin
 
     describe "GET #index" do
-      it "should return list of time locking periods for user" do
+      it "should return list of non current time locking periods for user" do
 
         workspace = create(:workspace)
         workspace_2 = create(:workspace)
 
         user = create(:user, active_workspace: workspace, workspace_ids: [workspace.id])
-        time_report = create(:time_locking_period, user: user, workspace: workspace)
-        time_report_2 = create(:time_locking_period, workspace: workspace)
-        time_report_3 = create(:time_locking_period, user: user)
+        time_report = create(:time_locking_period, user: user, workspace: workspace, end_of_period: Date.today - 1.day)
+        time_report_2 = create(:time_locking_period, workspace: workspace, end_of_period: Date.today - 1.day)
+        time_report_3 = create(:time_locking_period, user: user, end_of_period: Date.today - 1.day)
+        time_report_4 = create(:time_locking_period, user: user, workspace: workspace, end_of_period: Date.today + 1.day)
 
         allow(controller).to receive(:current_workspace_id) { workspace.id }
         get :index, params: { user_id: user.id, format: :json }
