@@ -13,8 +13,8 @@ class User < ApplicationRecord
   validates :locale, inclusion: { in: SUPPORTED_LANGUAGES,
     message: I18n.t("users.errors.locale_inclusion") }
 
+  has_one :notification_settings
   has_and_belongs_to_many :workspaces, -> { distinct }
   belongs_to :active_workspace, class_name: "Workspace",
                                 foreign_key: "active_workspace_id"
 end
-

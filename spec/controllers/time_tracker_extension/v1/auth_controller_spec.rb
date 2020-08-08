@@ -59,7 +59,8 @@ module TimeTrackerExtension
               id: period.id,
               from: period.beginning_of_period.strftime("%d/%m/%Y"),
               to: period.end_of_period.strftime("%d/%m/%Y")
-            }]
+            }],
+            notification_settings: []
           }.to_json)
         end
       end

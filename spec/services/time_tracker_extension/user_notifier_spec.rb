@@ -16,6 +16,9 @@ class DummyNotifier
 
   def send_notification(notification_class)
   end
+
+  def notification_found_in_settings(notification_type)
+  end
 end
 
 module TimeTrackerExtension
@@ -30,11 +33,31 @@ module TimeTrackerExtension
         notifier.send(:notifications)
       end
 
-      it "should call method send_notification and pass telegram notifier class if user has telegram id" do
+      it "should not call method if user doesn't have notification setting" do
         allow(notifier).to receive(:notify_by_email)
         allow(user).to receive(:telegram_id) { 111 }
-        expect(notifier).to receive(:send_notification).with(TimeTrackerExtension::Notifiers::Telegram)
+        allow(notifier).to receive(:notification_found_in_settings) { false }
         notifier.send(:notifications)
+      end
+
+      context "all checks were passed" do
+        before do
+          allow(notifier).to receive(:notify_by_email)
+          allow(user).to receive(:telegram_id) { 111 }
+          allow(notifier).to receive(:notification_found_in_settings) { true }
+        end
+
+        it "should call method for creating specific notifier" do
+          expect(TimeTrackerExtension::Notifiers::Telegram).to receive(:new).with(user, { period: "period" }) { double(approve_period: true) }
+          notifier.send(:notifications)
+        end
+
+        it "should send cnotification via specific notifier" do
+          telegram_notifier = double
+          allow(TimeTrackerExtension::Notifiers::Telegram).to receive(:new).with(user, { period: "period" }) { telegram_notifier }
+          expect(telegram_notifier).to receive(:approve_period)
+          notifier.send(:notifications)
+        end
       end
     end
   end
