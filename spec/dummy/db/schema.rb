@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_29_175717) do
+ActiveRecord::Schema.define(version: 2020_08_09_115958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,7 +86,6 @@ ActiveRecord::Schema.define(version: 2020_07_29_175717) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "role"
     t.string "locale", default: "en"
     t.integer "active_workspace_id"
     t.string "telegram_token"
@@ -95,9 +94,10 @@ ActiveRecord::Schema.define(version: 2020_07_29_175717) do
     t.index ["telegram_token"], name: "index_users_on_telegram_token", unique: true
   end
 
-  create_table "users_workspaces", id: false, force: :cascade do |t|
+  create_table "users_workspaces", force: :cascade do |t|
     t.bigint "workspace_id", null: false
     t.bigint "user_id", null: false
+    t.integer "role"
     t.index ["user_id", "workspace_id"], name: "index_users_workspaces_on_user_id_and_workspace_id"
     t.index ["workspace_id", "user_id"], name: "index_users_workspaces_on_workspace_id_and_user_id"
   end
