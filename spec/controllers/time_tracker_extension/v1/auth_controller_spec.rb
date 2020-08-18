@@ -9,7 +9,7 @@ module TimeTrackerExtension
 
     describe "get #index" do
       context "user was authorized" do
-        login_staff
+        login_user(:staff)
 
         let!(:period) { create(:time_locking_period,
           user: @current_user,
@@ -50,10 +50,10 @@ module TimeTrackerExtension
             id: @current_user.id,
             email: @current_user.email,
             name: @current_user.name,
-            role: @current_user.role,
             locale: @current_user.locale,
             active_workspace_id: @current_user.active_workspace_id,
             telegram_token: @current_user.telegram_token,
+            role: @current_user.role,
             telegram_active: @current_user.telegram_id.present?,
             unapproved_periods: [{
               id: period.id,

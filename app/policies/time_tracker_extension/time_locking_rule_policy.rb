@@ -1,19 +1,15 @@
 module TimeTrackerExtension
   class TimeLockingRulePolicy < ApplicationPolicy
     def index?
-      user_is_admin?
+      user? && workspace_belongs_to_user?
     end
 
     def create?
-      user_is_admin?
-    end
-
-    def update?
-      user_is_admin?
+      user? && workspace_belongs_to_user?
     end
 
     def destroy?
-      user_is_admin?
+      user? && workspace_belongs_to_user?
     end
   end
 end

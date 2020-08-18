@@ -1,5 +1,6 @@
-json.(user, :id, :email, :name, :role, :locale, :active_workspace_id, :telegram_token)
+json.(user, :id, :email, :name, :locale, :active_workspace_id, :telegram_token)
 
+json.role user.role(@current_workspace_id)
 json.telegram_active user.telegram_id.present?
 json.unapproved_periods user.unapproved_periods do |period|
   json.id period.id

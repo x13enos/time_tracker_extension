@@ -65,7 +65,7 @@ module TimeTrackerExtension
       end
 
       context "approve via UI" do
-        login_staff
+        login_user(:staff)
         let!(:period) { create(:time_locking_period, approved: false, user: @current_user, workspace_id: @current_user.active_workspace_id)  }
 
         let(:request_params) { {

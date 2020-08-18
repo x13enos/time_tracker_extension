@@ -3,7 +3,7 @@ require 'rails_helper'
 module TimeTrackerExtension
   RSpec.describe V1::TimeRecordsController, type: :controller do
     routes { TimeTrackerExtension::Engine.routes }
-    login_staff
+    login_user(:staff)
 
     describe "GET #index" do
       it "should call methods for searching blocked days" do

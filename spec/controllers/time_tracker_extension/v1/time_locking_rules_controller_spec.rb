@@ -3,56 +3,48 @@ require 'rails_helper'
 module TimeTrackerExtension
   RSpec.describe V1::TimeLockingRulesController, type: :controller do
     routes { TimeTrackerExtension::Engine.routes }
-    login_admin
 
     describe "GET #index" do
       it "should return list of workspace's time locking rules" do
 
         workspace = create(:workspace)
+        login_user(:owner, workspace)
         workspace_2 = create(:workspace)
 
         rule = create(:time_locking_rule, period: 0, workspace: workspace)
         rule_2 = create(:time_locking_rule, period: 1,  workspace: workspace_2)
         rule_3 = create(:time_locking_rule, period: 1)
 
-        workspace.users << @current_user
-        workspace_2.users << @current_user
-
-        get :index, params: { format: :json }
+        get :index, params: { workspace_id: workspace.id, format: :json }
         expect(response.body).to eq([
           {
             id: rule.id,
-            period: rule.period,
-            workspace_id: rule.workspace_id
-          },
-          {
-            id: rule_2.id,
-            period: rule_2.period,
-            workspace_id: rule_2.workspace_id
+            period: rule.period
           }
         ].to_json)
       end
     end
 
     describe "POST #create" do
+      let(:workspace) { create(:workspace) }
+
+      before do
+        login_user(:owner, workspace)
+      end
+
       it "should return error if passed workspace doesn't belong to user" do
-        workspace = create(:workspace)
-        post(:create, params: { period: "weekly", workspace_id: workspace.id, format: :json })
+        workspace_2 = create(:workspace)
+        post(:create, params: { period: "weekly", workspace_id: workspace_2.id, format: :json })
         expect(response.body).to eq(
            { errors: { base: "User doesn't have access to that workspace" }}.to_json
         )
       end
 
       it "should create new time locking rule" do
-        workspace = create(:workspace)
-        workspace.users << @current_user
-
         expect{ post(:create, params: { period: "monthly", workspace_id: workspace.id, format: :json }) }.to change{ TimeLockingRule.count }.from(0).to(1)
       end
 
       it "should return data of created user" do
-        workspace = create(:workspace)
-        workspace.users << @current_user
 
         post(:create, params: { period: "weekly", workspace_id: workspace.id, format: :json })
         expect(response.body).to eq(
@@ -65,9 +57,6 @@ module TimeTrackerExtension
       end
 
       it "should return errors in case of fail" do
-        workspace = create(:workspace)
-        workspace.users << @current_user
-
         post(:create, params: { period: "", workspace_id: workspace.id, format: :json })
         expect(response.body).to eq(
           {
@@ -80,12 +69,8 @@ module TimeTrackerExtension
     end
 
     describe "DELETE #destroy" do
-      login_admin
+      login_user(:owner)
       let!(:time_locking_rule) { create(:time_locking_rule, workspace: @current_user.active_workspace) }
-
-      before do
-        @current_user.active_workspace.users << @current_user
-      end
 
       it "should return rule's data if it was deleted" do
         delete :destroy, params: { id: time_locking_rule.id, format: :json }

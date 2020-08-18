@@ -2,9 +2,9 @@ require "rails_helper"
 
 module TimeTrackerExtension
   RSpec.describe DailyReportsSender do
-    let!(:workspace) { create(:workspace) }
-    let!(:project) { create(:project, workspace: workspace) }
     let!(:admin) { create(:user, :admin) }
+    let!(:workspace) { admin.active_workspace }
+    let!(:project) { create(:project, workspace: workspace) }
     let!(:staff) { create(:user, :staff) }
     let(:report_data) do
       {
@@ -35,8 +35,8 @@ module TimeTrackerExtension
       create(:time_record, assigned_date: Date.yesterday, spent_time: 0.5, user: staff, project: project)
       create(:time_record, assigned_date: Date.yesterday, spent_time: 2, user: admin)
 
-      workspace.users << [admin, staff]
-      allow(workspace).to receive_message_chain(:users, :admin) { [admin] }
+      workspace.users << [staff]
+      allow(workspace).to receive_message_chain(:users, :where) { [admin] }
       expect(::UserNotifier).to receive(:new).with(admin, :daily_report, { report_data: report_data }) { double(perform: true) }
       TimeTrackerExtension::DailyReportsSender.execute
       travel_back

@@ -1,20 +1,20 @@
 module TimeTrackerExtension
   class V1::TimeLockingRulesController < ::V1::BaseController
     def index
-      authorize TimeLockingRule
-      @time_locking_rules = TimeLockingRule.where(workspace_id: current_user.workspace_ids)
+      authorize workspace, policy_class: TimeTrackerExtension::TimeLockingRulePolicy
+      @time_locking_rules = TimeLockingRule.where(workspace_id: params[:workspace_id])
     end
 
     def create
-      authorize TimeLockingRule
       validate_workspace_id and return
+      authorize workspace, policy_class: TimeTrackerExtension::TimeLockingRulePolicy
       @time_locking_rule = TimeLockingRule.new(rule_params)
       @time_locking_rule.save
       generate_response
     end
 
     def destroy
-      authorize TimeLockingRule
+      authorize time_locking_rule.workspace, policy_class: TimeTrackerExtension::TimeLockingRulePolicy
       time_locking_rule.destroy
       generate_response
     end
@@ -43,6 +43,10 @@ module TimeTrackerExtension
 
     def rule_params
       params.permit(:period, :workspace_id)
+    end
+
+    def workspace
+      @workspace ||= current_user.workspaces.find(params[:workspace_id])
     end
   end
 end

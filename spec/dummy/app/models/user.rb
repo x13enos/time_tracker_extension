@@ -14,7 +14,25 @@ class User < ApplicationRecord
     message: I18n.t("users.errors.locale_inclusion") }
 
   has_one :notification_settings
-  has_and_belongs_to_many :workspaces, -> { distinct }
+  has_many :users_workspaces
+  has_many :workspaces, -> { distinct }, through: :users_workspaces
   belongs_to :active_workspace, class_name: "Workspace",
                                 foreign_key: "active_workspace_id"
+
+  def role(workspace_id = nil)
+    workspace_id ||= active_workspace_id
+    users_workspaces.find_by(workspace_id: workspace_id).role
+  end
+
+  def admin?
+    role == 'admin'
+  end
+
+  def owner?
+    role == 'owner'
+  end
+
+  def owner_for_workspace?(workspace_id)
+    role(workspace_id) == 'owner'
+  end
 end

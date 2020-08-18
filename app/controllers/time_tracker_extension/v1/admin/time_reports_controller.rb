@@ -22,11 +22,8 @@ module TimeTrackerExtension
       authorize([:time_tracker_extension, :admin, :user_time_report])
     end
 
-    def user
-      @user ||= User.includes(:workspaces).where(workspaces: { id:  current_workspace_id } ).find(params[:user_id])
-    end
-
     def user_time_reports
+      user = Workspace.find(current_workspace_id).users.find(params[:user_id])
       user.time_locking_periods.where(workspace_id: current_workspace_id)
     end
 

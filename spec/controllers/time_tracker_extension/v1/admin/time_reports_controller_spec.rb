@@ -3,15 +3,15 @@ require 'rails_helper'
 module TimeTrackerExtension
   RSpec.describe V1::Admin::TimeReportsController, type: :controller do
     routes { TimeTrackerExtension::Engine.routes }
-    login_admin
+
+    login_user(:owner)
 
     describe "GET #index" do
+      let!(:workspace) { create(:workspace, users: [@current_user]) }
+      let!(:workspace_2) { create(:workspace) }
+
       it "should return list of non current time locking periods for user" do
-
-        workspace = create(:workspace)
-        workspace_2 = create(:workspace)
-
-        user = create(:user, active_workspace: workspace, workspace_ids: [workspace.id])
+        user = create(:user, active_workspace: workspace, workspaces: [workspace])
         time_report = create(:time_locking_period, user: user, workspace: workspace, end_of_period: Date.today - 1.day)
         time_report_2 = create(:time_locking_period, workspace: workspace, end_of_period: Date.today - 1.day)
         time_report_3 = create(:time_locking_period, user: user, end_of_period: Date.today - 1.day)
@@ -31,11 +31,12 @@ module TimeTrackerExtension
     end
 
     describe "PUT #update" do
-      let(:workspace) { @current_user.active_workspace }
-      let!(:user) { create(:user, active_workspace: workspace, workspace_ids: [workspace.id]) }
+      let!(:workspace) { create(:workspace, users: [@current_user]) }
+      let!(:user) { create(:user, active_workspace: workspace) }
       let!(:time_report) { create(:time_locking_period, user: user, workspace: workspace) }
 
       before do
+        allow(controller).to receive(:current_workspace_id) { workspace.id }
         allow_any_instance_of(User).to receive_message_chain(:time_locking_periods, :where, :find) { time_report }
       end
 
