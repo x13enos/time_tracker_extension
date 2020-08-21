@@ -32,7 +32,7 @@ class User < ApplicationRecord
     role == 'owner'
   end
 
-  def owner_for_workspace?(workspace_id)
+  def workspace_owner?(workspace_id)
     role(workspace_id) == 'owner'
   end
 end

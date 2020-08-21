@@ -13,11 +13,11 @@ class ApplicationPolicy
   end
 
   def user_is_admin?
-    user? && user.try(:admin?)
+    user? && user.admin?
   end
 
   def user_is_owner?
-    user? && user.try(:owner?)
+    user? && user.owner?
   end
 
   def user_is_manager?
@@ -29,7 +29,7 @@ class ApplicationPolicy
   end
 
   def workspace_belongs_to_user?
-    user.owner_for_workspace?(record.id)
+    user.workspace_owner?(record.id)
   end
 
 end
