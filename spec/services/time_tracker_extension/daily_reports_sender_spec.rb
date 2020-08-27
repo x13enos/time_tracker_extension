@@ -37,7 +37,12 @@ module TimeTrackerExtension
 
       workspace.users << [staff]
       allow(workspace).to receive_message_chain(:users, :where) { [admin] }
-      expect(::UserNotifier).to receive(:new).with(admin, :daily_report, { report_data: report_data }) { double(perform: true) }
+      expect(::UserNotifier).to receive(:new).with({
+        user: admin,
+        notification_type: :daily_report,
+        additional_data: { report_data: report_data },
+        workspace_id: workspace.id
+      }) { double(perform: true) }
       TimeTrackerExtension::DailyReportsSender.execute
       travel_back
     end

@@ -6,4 +6,9 @@ class Workspace < ApplicationRecord
   has_many :projects, dependent: :destroy
   has_many :time_records, through: :projects
 
+  validates :name, presence: true
+
+  def belongs_to_user?(user_id)
+    self.user_ids.include?(user_id)
+  end
 end

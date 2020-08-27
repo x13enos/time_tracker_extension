@@ -11,7 +11,7 @@ module TimeTrackerExtension
         let!(:today) { Date.today }
         let!(:workspace) { create(:workspace) }
         let!(:project) { create(:project, workspace: workspace) }
-        let!(:user) { create(:user, active_workspace_id: workspace.id, workspace_ids: [workspace.id]) }
+        let!(:user) { create(:user, active_workspace_id: workspace.id) }
 
         let!(:time_locking_period) do
           create(:time_locking_period,
@@ -62,7 +62,7 @@ module TimeTrackerExtension
     describe "#unblock!" do
       let!(:today) { Date.today }
       let!(:workspace) { create(:workspace) }
-      let!(:user) { create(:user, active_workspace_id: workspace.id, workspace_ids: [workspace.id]) }
+      let!(:user) { create(:user, active_workspace_id: workspace.id) }
 
       let!(:current_time_locking_period) do
         create(:time_locking_period,

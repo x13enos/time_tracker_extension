@@ -10,17 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_09_115958) do
+ActiveRecord::Schema.define(version: 2020_08_21_184606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "notification_settings", force: :cascade do |t|
-    t.jsonb "rules", default: []
-    t.integer "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
 
   create_table "projects", force: :cascade do |t|
     t.string "name"
@@ -97,9 +90,10 @@ ActiveRecord::Schema.define(version: 2020_08_09_115958) do
   create_table "users_workspaces", force: :cascade do |t|
     t.bigint "workspace_id", null: false
     t.bigint "user_id", null: false
-    t.integer "role"
-    t.index ["user_id", "workspace_id"], name: "index_users_workspaces_on_user_id_and_workspace_id"
-    t.index ["workspace_id", "user_id"], name: "index_users_workspaces_on_workspace_id_and_user_id"
+    t.integer "role", default: 0
+    t.jsonb "notification_rules", default: []
+    t.index ["user_id", "workspace_id"], name: "index_users_workspaces_on_user_id_and_workspace_id", unique: true
+    t.index ["workspace_id", "user_id"], name: "index_users_workspaces_on_workspace_id_and_user_id", unique: true
   end
 
   create_table "workspaces", force: :cascade do |t|
