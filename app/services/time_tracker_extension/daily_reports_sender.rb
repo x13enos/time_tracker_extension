@@ -17,8 +17,13 @@ module TimeTrackerExtension
           workspace_name: workspace.name,
           users_data: users_data(workspace)
         }
-        workspace.users.where("users_workspaces.role = ?", UsersWorkspace.roles["admin"]).each do |admin|
-          ::UserNotifier.new(admin, :daily_report, { report_data: report_data }).perform
+        workspace.users.where("users_workspaces.role IN (?)", roles).each do |user|
+          ::UserNotifier.new(
+            user: user,
+            notification_type: :daily_report,
+            additional_data: { report_data: report_data },
+            workspace_id: workspace.id
+          ).perform
         end
       end
 
@@ -32,6 +37,10 @@ module TimeTrackerExtension
           }
           data
         end
+      end
+
+      def roles
+        UsersWorkspace.roles.fetch_values("admin", "owner")
       end
 
     end

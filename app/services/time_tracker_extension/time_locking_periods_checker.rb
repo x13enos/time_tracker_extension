@@ -18,7 +18,12 @@ module TimeTrackerExtension
 
       def notify_users_about_timereports(periods)
         periods.each do |period|
-          ::UserNotifier.new(period.user, :approve_period, { period: period }).perform
+          ::UserNotifier.new(
+            user: period.user,
+            notification_type: :approve_period,
+            additional_data: { period: period },
+            workspace_id: period.workspace_id
+          ).perform
         end
       end
 

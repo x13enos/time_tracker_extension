@@ -2,10 +2,12 @@ FactoryBot.define do
 
   factory :user do
 
-    after(:create) do |object|
-      object.active_workspace.users << object
-      if object.notification_settings.nil?
-        object.create_notification_settings
+    before(:create) do |object|
+      if object.active_workspace_id.nil?
+        workspace = create(:workspace)
+        object.active_workspace = workspace
+      else
+        object.workspaces << object.active_workspace
       end
     end
 
@@ -13,6 +15,7 @@ FactoryBot.define do
     email    { Faker::Internet.unique.email }
     password { "password" }
     association :active_workspace, factory: :workspace
+    telegram_token { SecureRandom.hex }
 
     trait :owner do
       after(:create) do |object|
