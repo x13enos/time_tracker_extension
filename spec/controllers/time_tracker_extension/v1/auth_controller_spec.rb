@@ -60,7 +60,13 @@ module TimeTrackerExtension
               id: period.id,
               from: period.beginning_of_period.strftime("%d/%m/%Y"),
               to: period.end_of_period.strftime("%d/%m/%Y")
-            }]
+            }],
+            workspaces: [
+              {
+                id: @current_user.workspaces.first.id,
+                name: @current_user.workspaces.first.name
+              }
+            ]
           }.to_json)
         end
       end
