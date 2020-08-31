@@ -7,7 +7,7 @@ module TimeTrackerExtension
 
     def index
       if current_user
-        render_json_partial('/v1/users/show.json.jbuilder', { user: current_user })
+        render_json_partial('/v1/auth/user.json.jbuilder', { user: current_user })
       else
         render json: { error: I18n.t("auth.errors.unathorized") }, status: 401
       end
