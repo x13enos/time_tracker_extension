@@ -16,7 +16,7 @@ namespace :time_tracker_extension do
   desc "send_daily reports to admins"
   task send_daily_reports: :environment do
     time = Time.now
-    TimeTrackerExtension::DailyReportsSender.execute
+    TimeTrackerExtension::ReportsSender::Daily.execute
     puts "Task was finished for #{ (Time.now - time).round } seconds"
   end
 

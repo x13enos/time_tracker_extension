@@ -59,6 +59,26 @@ module TimeTrackerExtension
       it { should belong_to(:user) }
     end
 
+    describe "#approve!" do
+      let(:period) { create(:time_locking_period, approved: false) }
+
+      it "should set attribute approved as true" do
+        period.approve!
+        expect(period.reload.approved).to be_truthy
+      end
+
+      it "should launch job for sending reports" do
+        expect(TimeTrackerExtension::SendPeriodReportsJob).to receive(:perform_later).with(period)
+        period.approve!
+      end
+
+      it "should not launch job for sending reports if approved status is already true" do
+        period.update(approved: true)
+        expect(TimeTrackerExtension::SendPeriodReportsJob).to_not receive(:perform_later)
+        period.approve!
+      end
+    end
+
     describe "#unblock!" do
       let!(:today) { Date.today }
       let!(:workspace) { create(:workspace) }

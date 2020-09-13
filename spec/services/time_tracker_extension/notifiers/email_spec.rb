@@ -31,5 +31,22 @@ module TimeTrackerExtension
         notifier.approve_period
       end
     end
+
+    describe "period_reports" do
+      let!(:notifier) { DummyEmailNotifier.new(user, { period: "period", reports: "reports" }) }
+
+      it "should build email" do
+        mail = double(deliver_now: true)
+        expect(TimeTrackerExtension::UserMailer).to receive(:period_reports).with(user, "reports", "period") { mail }
+        notifier.period_reports
+      end
+
+      it "should send email to user" do
+        mail = double
+        allow(TimeTrackerExtension::UserMailer).to receive(:period_reports) { mail }
+        expect(mail).to receive(:deliver_now)
+        notifier.period_reports
+      end
+    end
   end
 end

@@ -59,9 +59,11 @@ module TimeTrackerExtension
         dispatch(callback_query: { "id" => "825638170257681899", from: { id: 1 }, message: { chat: { id: "1" }, message_id: "1" }, data: "approve_period:#{period.id}"})
       end
 
-      it "should approved period" do
+      it "should approve period" do
+        allow(User).to receive(:find_by) { current_user }
+        allow(current_user).to receive_message_chain(:time_locking_periods, :find_by) { period }
+        expect(period).to receive(:approve!) { true }
         execute_callback_query(period)
-        expect(period.reload.approved).to be_truthy
       end
 
       it "should return query message - done" do
@@ -79,7 +81,7 @@ module TimeTrackerExtension
       it "should return error in case of invalid period" do
         allow(User).to receive(:find_by) { current_user }
         allow(current_user).to receive_message_chain(:time_locking_periods, :find_by) { period }
-        allow(period).to receive(:update) { false }
+        allow(period).to receive(:approve!) { false }
         period.errors.add(:base, "error message")
         message = I18n.t('telegram.error', message: "error message")
         expect_any_instance_of(TimeTrackerExtension::TelegramController).to receive(:answer_callback_query).with(message)
