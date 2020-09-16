@@ -29,8 +29,16 @@ module TimeTrackerExtension
 
           it "should approve time locking period" do
             allow(User).to receive(:find_by) { user }
+            allow(user).to receive_message_chain(:time_locking_periods, :where, :find) { period }
+            expect(period).to receive(:approve!)
             put :update, params: request_params
-            expect(period.reload.approved).to be_truthy
+          end
+
+          it "should launch job for sending reports" do
+            allow(User).to receive(:find_by) { user }
+            allow(user).to receive_message_chain(:time_locking_periods, :where, :find) { period }
+            expect(TimeTrackerExtension::SendPeriodReportsJob).to receive(:perform_later).with(period)
+            put :update, params: request_params
           end
 
           it "should return 200 status" do
@@ -42,7 +50,7 @@ module TimeTrackerExtension
           it "should return 400 status if period wasn't approved" do
             allow(User).to receive(:find_by) { user }
             allow(user).to receive_message_chain(:time_locking_periods, :where, :find) { period  }
-            allow(period).to receive(:update) { false }
+            allow(period).to receive(:approve!) { false }
             put :update, params: request_params
             expect(response.status).to eq(400)
           end
@@ -50,7 +58,7 @@ module TimeTrackerExtension
           it "should return error message if period wasn't approved" do
             allow(User).to receive(:find_by) { user }
             allow(user).to receive_message_chain(:time_locking_periods, :where, :find) { period  }
-            allow(period).to receive(:update) { false }
+            allow(period).to receive(:approve!) { false }
             period.errors.add(:base, "error")
             put :update, params: request_params
             expect(response.body).to eq({ errors: { base: ["error"] } }.to_json)
@@ -87,6 +95,14 @@ module TimeTrackerExtension
           put :update, params: request_params
           expect(period.reload.approved).to be_truthy
         end
+
+        it "should find period and approve it" do
+          allow(User).to receive(:find_by) { @current_user }
+          allow(@current_user).to receive_message_chain(:time_locking_periods, :where, :find) { period }
+          expect(period).to receive(:approve!)
+          put :update, params: request_params
+        end
+
       end
     end
   end

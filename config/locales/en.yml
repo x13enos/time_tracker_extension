@@ -2,8 +2,10 @@ en:
   mailers:
     subjects:
       approve_your_timereport: "Have you filled your time report?"
+      period_reports: "Reports for workspace \"%{workspace}\" on period %{from} - %{to}"
     hello_with_name: "Hello %{user}!"
     please_approve_time_report: "Please approve that you have filled your timereport for workspace \"%{workspace}\" on period %{from} - %{to}."
+    all_users_approved_their_reports: "All users approved their timereports for the workspace - \"%{workspace}\". You can download them from the attachments."
     approve: "APPROVE"
   time_locking_rules:
     user_does_not_have_access_to_workspace: "User doesn't have access to that workspace"

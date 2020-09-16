@@ -2,8 +2,10 @@ ru:
   mailers:
     subjects:
       approve_your_timereport: "Вы уже заполнили свой отчет?"
+      period_reports: "Отчеты для рабочего пространства \"%{workspace}\" за период %{from} - %{to}"
     hello_with_name: "Здравствуйте %{user}!"
     please_approve_time_report: "Пожалуйста, подтвердите что вы заполнили отчет для рабочего пространства \"%{workspace}\" за период %{from} - %{to}."
+    all_users_approved_their_reports: "Все пользователи подтвердили их отчеты для рабочего пространства - \"%{workspace}\". Теперь, вы можете скачать их, из прикрепленных к этому письму файлов."
     approve: "ПОДТВЕРДИТЬ"
   time_locking_rules:
      user_does_not_have_access_to_workspace: "У вас нет доступа к выбранному рабочему пространству"

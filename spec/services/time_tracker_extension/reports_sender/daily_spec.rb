@@ -1,7 +1,7 @@
 require "rails_helper"
 
 module TimeTrackerExtension
-  RSpec.describe DailyReportsSender do
+  RSpec.describe ReportsSender::Daily do
     let!(:admin) { create(:user, :admin) }
     let!(:workspace) { admin.active_workspace }
     let!(:project) { create(:project, workspace: workspace) }
@@ -43,7 +43,7 @@ module TimeTrackerExtension
         additional_data: { report_data: report_data },
         workspace_id: workspace.id
       }) { double(perform: true) }
-      TimeTrackerExtension::DailyReportsSender.execute
+      TimeTrackerExtension::ReportsSender::Daily.execute
       travel_back
     end
 

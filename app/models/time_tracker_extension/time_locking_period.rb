@@ -13,6 +13,12 @@ module TimeTrackerExtension
       related_periods.update_all(approved: false)
     end
 
+    def approve!
+      return if approved
+      update(approved: true)
+      TimeTrackerExtension::SendPeriodReportsJob.perform_later(self)
+    end
+
     private
 
     def does_not_contain_running_tasks
