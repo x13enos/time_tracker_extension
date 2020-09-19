@@ -73,13 +73,6 @@ module TimeTrackerExtension
         }) { double(perform: true) }
         TimeTrackerExtension::ReportsSender::Period.new(period).perform
       end
-
-      it "should remove reports after sending them to admin" do
-        file = Tempfile.new
-        allow(ReportGenerator).to receive(:new) { double(file: file) }
-        expect(File).to receive(:delete).with(file)
-        TimeTrackerExtension::ReportsSender::Period.new(period).perform
-      end
     end
 
   end

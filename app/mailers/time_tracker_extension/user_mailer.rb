@@ -10,7 +10,10 @@ class TimeTrackerExtension::UserMailer < ApplicationMailer
     @recipient = recipient
     @period = period
     reports.each do |user_name, file|
-      attachments["#{user_name} #{period.beginning_of_period} | #{period.end_of_period}.pdf"] = File.read(file)
+      attachments["#{user_name} #{period.beginning_of_period} | #{period.end_of_period}.pdf"] = {
+        mime_type: 'application/pdf',
+        content: file
+      }
     end
     mail(
       to: @recipient.email,
