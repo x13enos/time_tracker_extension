@@ -9,7 +9,6 @@ module TimeTrackerExtension
         return false if some_users_does_not_approve_period?
         generate_reports
         send_notifications
-        remove_reports
       end
 
       private
@@ -41,12 +40,6 @@ module TimeTrackerExtension
             additional_data: { reports: reports, period: period },
             workspace_id: period.workspace_id
           ).perform
-        end
-      end
-
-      def remove_reports
-        reports.each do |user_name, report|
-          File.delete(report)
         end
       end
 
