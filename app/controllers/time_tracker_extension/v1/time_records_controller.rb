@@ -5,7 +5,7 @@ module TimeTrackerExtension
       super
       @blocked_days = TimeTrackerExtension::BlockedDaysSearcher.new(current_user,
                                                                     current_workspace_id,
-                                                                    @current_date).perform
+                                                                    @active_date).perform
     end
 
   end

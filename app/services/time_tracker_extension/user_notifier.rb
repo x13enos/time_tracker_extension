@@ -11,7 +11,7 @@ module TimeTrackerExtension
     def notify_by_telegram
       return unless user.telegram_id
       return unless notification_found_in_settings('telegram')
-      TimeTrackerExtension::Notifiers::Telegram.new(user, args).send(notification_type)
+      TimeTrackerExtension::Notifiers::Telegram.new(user, additional_data).send(notification_type)
     end
 
   end

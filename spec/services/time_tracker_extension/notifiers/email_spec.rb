@@ -2,13 +2,13 @@ require "rails_helper"
 
 class DummyEmailNotifier
   include TimeTrackerExtension::Notifiers::Email
-  def initialize(user, args)
+  def initialize(user, additional_data)
     @user = user
-    @args = args
+    @additional_data = additional_data
   end
 
   private
-  attr_reader :user, :args
+  attr_reader :user, :additional_data
 end
 
 module TimeTrackerExtension
