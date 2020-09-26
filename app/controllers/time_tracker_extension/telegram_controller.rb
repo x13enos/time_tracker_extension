@@ -7,7 +7,7 @@ module TimeTrackerExtension
     self.session_store = :memory_store
 
     around_action :with_locale
-
+    around_action :with_time_zone
 
     def start!(*)
       save_context(:check_token!)
@@ -34,6 +34,44 @@ module TimeTrackerExtension
       end
     end
 
+    def today_tasks!(*)
+      message_generator = TimeTrackerExtension::TelegramMessageGenerators::TodayTasks.new(current_user)
+      respond_with :message, text: message_generator.perform
+    end
+
+    def active_task!(*)
+      message_generator = TimeTrackerExtension::TelegramMessageGenerators::ActiveTask.new(current_user)
+      respond_with :message, message_generator.perform
+    end
+
+    def stop_active_task_callback_query(time_record_id = nil, *)
+      time_record = current_user.time_records.find(time_record_id)
+      time_record.update(time_start: nil, spent_time: time_record.calculated_spent_time)
+      answer_callback_query(t("telegram.done"))
+      edit_message("text", { text: t('telegram.task_was_stopped', description: time_record.description, time: time_record.calculated_spent_time, project: time_record.project.name) })
+    end
+
+    def total_time!(*)
+      week_button = Telegram::Bot::Types::InlineKeyboardButton.new(text: t("telegram.total_time.week"), callback_data: "total_time:week")
+      month_button = Telegram::Bot::Types::InlineKeyboardButton.new(text: t("telegram.total_time.month"), callback_data: "total_time:month")
+      respond_with :message, {
+        text: t("telegram.total_time.select_period"),
+        reply_markup: { inline_keyboard: [[week_button, month_button]] }
+      }
+    end
+
+    def total_time_callback_query(period, *)
+      message_generator = TimeTrackerExtension::TelegramMessageGenerators::TotalTime.new(current_user, period)
+      edit_message("text", { text: message_generator.perform })
+    end
+
+    def unapproved_reports!(*)
+      respond_with(:message, { text: t("telegram.forbidden") }) and return if current_user.staff?
+
+      message_generator = TimeTrackerExtension::TelegramMessageGenerators::UnapprovedReports.new(current_user)
+      respond_with :message, text: message_generator.perform
+    end
+
     private
 
     def current_user
@@ -46,6 +84,12 @@ module TimeTrackerExtension
 
     def with_locale(&block)
       I18n.with_locale(locale, &block)
+    end
+
+    def with_time_zone
+      # TODO: change this when we start to keep timezone in user's model
+      timezone = 3
+      Time.use_zone(timezone) { yield }
     end
 
     def locale
