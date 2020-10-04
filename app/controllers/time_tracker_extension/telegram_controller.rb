@@ -26,12 +26,12 @@ module TimeTrackerExtension
 
     def approve_period_callback_query(period_id = nil, *)
       period = current_user.time_locking_periods.find_by(id: period_id)
-      approve_form = TimeTrackerExtension::TimeLockingPeriods::ApproveForm.new(period)
-      if approve_form.save
+      approver = TimeTrackerExtension::PeriodApprover.new(period)
+      if approver.perform
         answer_callback_query(t('telegram.done'))
         edit_message("text", { text: t('telegram.period_was_succesfully_approved', workspace: period.workspace.name, from: period.beginning_of_period, to: period.end_of_period) })
       else
-        answer_callback_query(t('telegram.error', message: approve_form.errors[:base].join(', ')))
+        answer_callback_query(t('telegram.error', message: approver.period.errors[:base].join(', ')))
       end
     end
 
