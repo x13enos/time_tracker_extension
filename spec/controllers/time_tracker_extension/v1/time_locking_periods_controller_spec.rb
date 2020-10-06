@@ -27,30 +27,23 @@ module TimeTrackerExtension
             put :update, params: request_params
           end
 
-          it "should approve time locking period" do
+          it "should create approving form" do
             allow(User).to receive(:find_by) { user }
             allow(user).to receive_message_chain(:time_locking_periods, :where, :find) { period }
-            expect(period).to receive(:approve!)
-            put :update, params: request_params
-          end
-
-          it "should launch job for sending reports" do
-            allow(User).to receive(:find_by) { user }
-            allow(user).to receive_message_chain(:time_locking_periods, :where, :find) { period }
-            expect(TimeTrackerExtension::SendPeriodReportsJob).to receive(:perform_later).with(period)
+            expect(TimeTrackerExtension::PeriodApprover).to receive(:new).with(period) { double(perform: true) }
             put :update, params: request_params
           end
 
           it "should return 200 status" do
             allow(User).to receive(:find_by) { user }
+            expect(TimeTrackerExtension::PeriodApprover).to receive(:new) { double(perform: true) }
             put :update, params: request_params
             expect(response.status).to eq(200)
           end
 
           it "should return 400 status if period wasn't approved" do
             allow(User).to receive(:find_by) { user }
-            allow(user).to receive_message_chain(:time_locking_periods, :where, :find) { period  }
-            allow(period).to receive(:approve!) { false }
+            expect(TimeTrackerExtension::PeriodApprover).to receive(:new) { double(perform: false, period: period) }
             put :update, params: request_params
             expect(response.status).to eq(400)
           end
@@ -58,7 +51,7 @@ module TimeTrackerExtension
           it "should return error message if period wasn't approved" do
             allow(User).to receive(:find_by) { user }
             allow(user).to receive_message_chain(:time_locking_periods, :where, :find) { period  }
-            allow(period).to receive(:approve!) { false }
+            expect(TimeTrackerExtension::PeriodApprover).to receive(:new) { double(perform: false, period: period) }
             period.errors.add(:base, "error")
             put :update, params: request_params
             expect(response.body).to eq({ errors: { base: ["error"] } }.to_json)
@@ -99,10 +92,11 @@ module TimeTrackerExtension
         it "should find period and approve it" do
           allow(User).to receive(:find_by) { @current_user }
           allow(@current_user).to receive_message_chain(:time_locking_periods, :where, :find) { period }
-          expect(period).to receive(:approve!)
+          approver = double(perform: true)
+          expect(TimeTrackerExtension::PeriodApprover).to receive(:new).with(period) { approver }
+          expect(approver).to receive(:perform)
           put :update, params: request_params
         end
-
       end
     end
   end

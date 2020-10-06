@@ -15,11 +15,12 @@ module TimeTrackerExtension
     private
 
     def approve_time_locking_period(user)
-      time_locking_period = user.time_locking_periods.where(workspace_id: workspace_id).find(params[:id])
-      if time_locking_period.approve!
+      period = user.time_locking_periods.where(workspace_id: workspace_id).find(params[:id])
+      approver = TimeTrackerExtension::PeriodApprover.new(period)
+      if approver.perform
         render json: { status: 'ok' }, status: 200
       else
-        render json: { errors: time_locking_period.errors }, status: 400
+        render json: { errors: approver.period.errors }, status: 400
       end
     end
 

@@ -31,6 +31,7 @@ ru:
         zero: "%{index}. %{name} - нет задач\n"
         one: "%{index}. %{name} - 1 задача, общее время: %{time}ч\n"
         few: "%{index}. %{name} - %{count} задачи, общее время: %{time}ч\n"
+        many: "%{index}. %{name} - %{count} задач, общее время: %{time}ч\n"
         other: "%{index}. %{name} - %{count} задач, общее время: %{time}ч\n"
       footer: "\nХорошего вам дня! ☀️"
     today_tasks:
