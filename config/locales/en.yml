@@ -25,6 +25,7 @@ en:
     done: "Done!"
     error: "%{message} ❌"
     you_were_assigned_to_project: "You were assigned to project \"%{project}\" in \"%{workspace}\"."
+    please_link_your_account_first: "You don't have access to this option until you link your Time Tracker Account with the Telegram Assistant bot. Please, use command /start for doing that."
     daily_report:
       body: "Good morning, %{user_name}! 👋\n\nHere is statistic of workspace \"%{workspace}\" by users for yesterday:\n\n"
       user_data:

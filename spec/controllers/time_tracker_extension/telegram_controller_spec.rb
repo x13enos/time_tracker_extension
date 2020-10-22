@@ -94,6 +94,11 @@ module TimeTrackerExtension
     describe '#today_tasks!' do
       let!(:current_user) { create(:user, telegram_id: 1) }
 
+      it "should return error in case of accessing by authorized user" do
+        error_message = I18n.t("telegram.please_link_your_account_first")
+        expect { dispatch_command(:today_tasks, { from: { id: 2 } }) }.to respond_with_message(error_message)
+      end
+
       it "should return generated message" do
         allow(TimeTrackerExtension::TelegramMessageGenerators::TodayTasks).to receive(:new) { double(perform: "today_tasks_message") }
         expect { dispatch_command(:today_tasks, { from: { id: 1 } }) }.to respond_with_message("today_tasks_message")
