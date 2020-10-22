@@ -8,6 +8,7 @@ module TimeTrackerExtension
 
     around_action :with_locale
     around_action :with_time_zone
+    before_action :authorize_user, except: [:start!, :check_token!]
 
     def start!(*)
       save_context(:check_token!)
@@ -109,6 +110,13 @@ module TimeTrackerExtension
       end
 
       respond_with :message, text:  text
+    end
+
+    def authorize_user
+      unless current_user
+        respond_with(:message, { text: t("telegram.please_link_your_account_first") })
+        throw :abort
+      end
     end
   end
 end
