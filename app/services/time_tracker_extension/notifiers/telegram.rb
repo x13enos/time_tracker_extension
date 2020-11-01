@@ -4,10 +4,11 @@ module TimeTrackerExtension
     def approve_period
       period = additional_data[:period]
       button = Telegram::Bot::Types::InlineKeyboardButton.new(text: I18n.t("telegram.approve_period"), callback_data: "approve_period:#{period.id}")
-      send_message(
+      response = send_message(
         I18n.t("telegram.please_approve_period", workspace: period.workspace.name, from: period.beginning_of_period, to: period.end_of_period),
         { inline_keyboard: [[button]] }
       )
+      period.update(telegram_message_id: response["result"]["message_id"])
     end
 
     def assign_user_to_project

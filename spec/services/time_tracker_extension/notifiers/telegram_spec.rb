@@ -6,16 +6,31 @@ module TimeTrackerExtension
 
     describe "approve_period" do
 
+      let(:telegram_response) do
+        {
+          "result" => {
+            "message_id" => 145
+          }
+        }
+      end
+
       it "should send message with 'approve' button to user" do
         allow(I18n).to receive(:t).and_call_original
 
-        period = double(id: 22, beginning_of_period: "1/01/2020", end_of_period: "7/01/2020", workspace: double(name: "workspace's name"))
+        period = double(id: 22, beginning_of_period: "1/01/2020", end_of_period: "7/01/2020", workspace: double(name: "workspace's name"), update: true)
         allow(I18n).to receive(:t).with("telegram.please_approve_period", workspace: "workspace's name", from: period.beginning_of_period, to: period.end_of_period) { 'telegram message' }
 
         button = double
         allow(Telegram::Bot::Types::InlineKeyboardButton).to receive(:new).with(text: I18n.t("telegram.approve_period"), callback_data: "approve_period:#{period.id}") { button }
 
-        expect(Telegram.bot).to receive(:send_message).with(chat_id: user.telegram_id, text: 'telegram message', reply_markup: { inline_keyboard: [[button]] })
+        expect(Telegram.bot).to receive(:send_message).with(chat_id: user.telegram_id, text: 'telegram message', reply_markup: { inline_keyboard: [[button]] }) { telegram_response }
+        TimeTrackerExtension::Notifiers::Telegram.new(user, { period: period }).approve_period
+      end
+
+      it "should update period with the message telegram id" do
+        period = create(:time_locking_period)
+        allow(Telegram.bot).to receive(:send_message) { telegram_response }
+        expect(period).to receive(:update).with(telegram_message_id: 145)
         TimeTrackerExtension::Notifiers::Telegram.new(user, { period: period }).approve_period
       end
 
