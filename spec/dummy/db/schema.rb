@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_21_184606) do
+ActiveRecord::Schema.define(version: 2020_10_31_181117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 2020_08_21_184606) do
     t.boolean "approved", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "telegram_message_id"
     t.index ["workspace_id", "user_id"], name: "locking_period_workspace_and_user_index"
   end
 
