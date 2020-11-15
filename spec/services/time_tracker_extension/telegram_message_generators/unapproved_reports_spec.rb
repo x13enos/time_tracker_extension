@@ -41,7 +41,7 @@ module TimeTrackerExtension
 
 
       it "should return message in case of all reports were approved" do
-        message = I18n.t("telegram.unapproved_periods.no_reports")
+        message = I18n.t("telegram.unapproved_reports.no_reports")
         expect(TimeTrackerExtension::TelegramMessageGenerators::UnapprovedReports.new(user).perform).to eq(message)
       end
     end

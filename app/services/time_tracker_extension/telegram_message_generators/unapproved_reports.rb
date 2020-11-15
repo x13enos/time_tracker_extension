@@ -8,7 +8,7 @@ module TimeTrackerExtension
       def perform
         reports = select_grouped_time_reports
         if reports.empty?
-          I18n.t("telegram.unapproved_periods.no_reports")
+          I18n.t("telegram.unapproved_reports.no_reports")
         else
           message(reports)
         end
