@@ -15,6 +15,10 @@ class DummyUserNotifier
 
   def notify_by_email
   end
+
+  def with_error_handling
+    yield
+  end
 end
 
 module TimeTrackerExtension
@@ -31,12 +35,23 @@ module TimeTrackerExtension
       end
 
       it "should call method for sending email" do
-        expect(notifier).to receive(:notify_by_email)
+        allow(notifier).to receive(:notify_by_email) { 'email success' }
+        expect(notifier).to receive(:with_error_handling) do |&block|
+          expect(block.call).to eq('email success')
+        end
+        expect(notifier).to receive(:with_error_handling).and_call_original
+
         notifier.send(:notifications)
       end
 
       it "should call method for sending telegram message" do
-        expect(notifier).to receive(:notify_by_telegram)
+        allow(notifier).to receive(:notify_by_telegram) { 'telegram success' }
+        expect(notifier).to receive(:with_error_handling).and_call_original
+
+        expect(notifier).to receive(:with_error_handling) do |&block|
+          expect(block.call).to eq('telegram success')
+        end
+
         notifier.send(:notifications)
       end
     end
@@ -78,6 +93,6 @@ module TimeTrackerExtension
         notifier.send(:notify_by_telegram)
       end
     end
-    
+
   end
 end
