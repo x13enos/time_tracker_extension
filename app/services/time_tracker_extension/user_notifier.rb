@@ -4,8 +4,8 @@ module TimeTrackerExtension
     private
 
     def notifications
-      notify_by_email
-      notify_by_telegram
+      with_error_handling { notify_by_email }
+      with_error_handling { notify_by_telegram }
     end
 
     def notify_by_telegram
