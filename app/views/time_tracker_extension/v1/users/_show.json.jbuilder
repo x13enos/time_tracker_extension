@@ -1,4 +1,4 @@
-json.(user, :id, :email, :name, :locale, :active_workspace_id, :telegram_token, :notification_settings)
+json.(user, :id, :email, :name, :locale, :timezone, :active_workspace_id, :telegram_token, :notification_settings)
 
 json.role user.role(@current_workspace_id)
 json.telegram_active user.telegram_id.present?
