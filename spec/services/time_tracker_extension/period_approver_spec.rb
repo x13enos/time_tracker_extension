@@ -46,6 +46,13 @@ module TimeTrackerExtension
           approver.perform
         end
 
+        it "should clean up period's telegram_message_id after the changing message" do
+          approver.period.update(telegram_message_id: 18283248)
+          allow(Telegram.bot).to receive(:edit_message_text)
+          approver.perform
+          expect(approver.period.telegram_message_id).to be_nil
+        end
+
         it "should not change telegram message text if period hasn't that" do
           allow(approver.period).to receive(:telegram_message_id) { nil }
           expect(Telegram.bot).to_not receive(:edit_message_text)
