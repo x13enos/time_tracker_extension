@@ -51,6 +51,7 @@ module TimeTrackerExtension
             email: @current_user.email,
             name: @current_user.name,
             locale: @current_user.locale,
+            timezone: @current_user.timezone,
             active_workspace_id: @current_user.active_workspace_id,
             telegram_token: @current_user.telegram_token,
             notification_settings: ['email_assign_user_to_project'],

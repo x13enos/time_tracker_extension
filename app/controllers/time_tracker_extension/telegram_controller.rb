@@ -89,8 +89,7 @@ module TimeTrackerExtension
     end
 
     def with_time_zone
-      # TODO: change this when we start to keep timezone in user's model
-      timezone = 3
+      timezone = ActiveSupport::TimeZone[current_user ? current_user.timezone : "Etc/UTC"]
       Time.use_zone(timezone) { yield }
     end
 
