@@ -28,6 +28,7 @@ module TimeTrackerExtension
         to: period.end_of_period
       )
       Telegram.bot.edit_message_text(chat_id: period.user.telegram_id, text: text, message_id: period.telegram_message_id)
+      period.update(telegram_message_id: nil)
     end
 
   end
