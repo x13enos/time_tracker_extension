@@ -61,7 +61,7 @@ module TimeTrackerExtension
         it "should return error message if token was expired" do
           allow(TokenCryptService).to receive(:decode).with("22222222") { nil }
           put :update, params: request_params
-          expect(response.body).to eq({ errors: { base: I18n.t("time_locking_periods.invalid_token") } }.to_json)
+          expect(response.body).to eq({ errors: { base: [I18n.t("time_locking_periods.link_is_expired")] } }.to_json)
         end
       end
 

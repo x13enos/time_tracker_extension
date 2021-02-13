@@ -8,7 +8,7 @@ module TimeTrackerExtension
       if user
         approve_time_locking_period(user)
       else
-        render json: { errors: { base: I18n.t("time_locking_periods.invalid_token") } }, status: 404
+        render json: { errors: { base: [I18n.t("time_locking_periods.link_is_expired")] } }, status: 404
       end
     end
 

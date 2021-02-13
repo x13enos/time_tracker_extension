@@ -10,6 +10,7 @@ en:
   time_locking_rules:
     user_does_not_have_access_to_workspace: "User doesn't have access to that workspace"
   time_locking_periods:
+    link_is_expired: "Link is expired."
     has_active_task: "You cannot approve time report until you stop launched tasks"
   time_records:
     errors:
