@@ -1,8 +1,8 @@
 class TimeRecord < ApplicationRecord
 
   belongs_to :user
-  belongs_to :project
-  has_one :workspace, through: :project
+  belongs_to :project, optional: true
+  belongs_to :workspace
   has_and_belongs_to_many :tags, -> { distinct }
 
   scope :by_workspace, ->(workspace_id) { joins(:project).where("projects.workspace_id = ?", workspace_id) }

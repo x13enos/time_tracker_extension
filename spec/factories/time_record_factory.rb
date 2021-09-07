@@ -5,6 +5,7 @@ FactoryBot.define do
     assigned_date { Date.today }
     association :user
     association :project
+    association :workspace
   end
 
 end

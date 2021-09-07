@@ -27,12 +27,12 @@ module TimeTrackerExtension
     it "should collect and send info to admins about users and their tasks for yesterday" do
       travel_to Date.today.beginning_of_month
 
-      create(:time_record, assigned_date: Date.yesterday, spent_time: 2, user: admin, project: project)
-      create(:time_record, assigned_date: Date.yesterday, spent_time: 1, user: admin, project: project)
-      create(:time_record, assigned_date: Date.yesterday - 1.day, spent_time: 5, user: admin, project: project)
+      create(:time_record, assigned_date: Date.yesterday, spent_time: 2, user: admin, workspace: workspace)
+      create(:time_record, assigned_date: Date.yesterday, spent_time: 1, user: admin,workspace: workspace)
+      create(:time_record, assigned_date: Date.yesterday - 1.day, spent_time: 5, user: admin, workspace: workspace)
       create(:time_record, assigned_date: Date.yesterday, spent_time: 2, user: admin)
 
-      create(:time_record, assigned_date: Date.yesterday, spent_time: 0.5, user: staff, project: project)
+      create(:time_record, assigned_date: Date.yesterday, spent_time: 0.5, user: staff, workspace: workspace)
       create(:time_record, assigned_date: Date.yesterday, spent_time: 2, user: admin)
 
       workspace.users << [staff]
