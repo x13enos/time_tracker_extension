@@ -10,6 +10,7 @@ ru:
   time_locking_rules:
      user_does_not_have_access_to_workspace: "У вас нет доступа к выбранному рабочему пространству"
   time_locking_periods:
+    invalid_token: "Ссылка из письма устарела."
     has_active_task: "Вы не можете подтвердить отчет, пока не остановите все запущенные задачи"
   time_records:
     errors:
