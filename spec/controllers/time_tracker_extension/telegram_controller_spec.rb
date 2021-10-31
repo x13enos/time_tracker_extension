@@ -86,7 +86,7 @@ module TimeTrackerExtension
         form.errors.add(:base, "error message")
         form.dates_of_invalid_time_records = ["2021-10-29", "2021-10-30"]
         allow(form).to receive(:save) { false }
-        links = "[2021-10-29](https://www.google.com?date=2021-10-29), [2021-10-30](https://www.google.com?date=2021-10-30)"
+        links = "[2021-10-29](https://#{ENV['FRONTEND_HOST']}/tasks?date=2021-10-29), [2021-10-30](https://#{ENV['FRONTEND_HOST']}/tasks?date=2021-10-30)"
         message = I18n.t('telegram.period_has_inconsistent_data', dates: links)
         expect_any_instance_of(TimeTrackerExtension::TelegramController).to receive(:edit_message).with("text", { text: message, parse_mode: :Markdown })
         execute_callback_query(period)

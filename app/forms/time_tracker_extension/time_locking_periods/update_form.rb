@@ -26,7 +26,7 @@ module TimeTrackerExtension
       end
   
       def has_consistent_data?
-        inconsistent_entries = period.tasks.where("coalesce(description, '') = '' OR project_id IS NULL")
+        inconsistent_entries = period.tasks.where("coalesce(description, '') = '' OR project_id IS NULL OR spent_time = '0.0'")
         if inconsistent_entries.count > 0
           @dates_of_invalid_time_records = inconsistent_entries.map(&:assigned_date).uniq
           errors.add(:base, I18n.t("time_locking_periods.has_inconsistent_data"))

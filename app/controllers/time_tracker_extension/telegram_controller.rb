@@ -32,7 +32,7 @@ module TimeTrackerExtension
         answer_callback_query(t('telegram.done'))
         edit_message("text", { text: t('telegram.period_was_succesfully_approved', workspace: period.workspace.name, from: period.beginning_of_period, to: period.end_of_period) })
       else
-        links = form.dates_of_invalid_time_records.map { |d| "[#{d}](https://www.google.com?date=#{d})" }.join(', ')
+        links = form.dates_of_invalid_time_records.map { |d| "[#{d}](https://#{ENV['FRONTEND_HOST']}/tasks?date=#{d})" }.join(', ')
         edit_message("text", { text: t('telegram.period_has_inconsistent_data', dates: links), parse_mode: :Markdown} )
       end
     end

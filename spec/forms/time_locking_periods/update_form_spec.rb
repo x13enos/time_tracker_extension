@@ -41,12 +41,16 @@ RSpec.describe TimeTrackerExtension::TimeLockingPeriods::UpdateForm do
       end
 
       it 'should add dates to the form\'s variable' do
-        time_record_1 = create(:time_record, workspace: period.workspace, user: period.user, assigned_date: Date.today - 2.days, description: nil)
-        time_record_2 = create(:time_record, workspace: period.workspace, user: period.user, assigned_date: Date.today - 2.days, description: nil)
-        time_record_3 = create(:time_record, workspace: period.workspace, user: period.user, assigned_date: Date.today - 3.days, project_id: nil)
+        usual_data = { workspace: period.workspace, user: period.user }
+        time_record_1 = create(:time_record, usual_data.merge({ assigned_date: Date.today - 2.days, description: nil }))
+        time_record_2 = create(:time_record, usual_data.merge({ assigned_date: Date.today - 2.days, description: nil }))
+        time_record_3 = create(:time_record, usual_data.merge({ assigned_date: Date.today - 3.days, project_id: nil }))
+        time_record_4 = create(:time_record, usual_data.merge({ assigned_date: Date.today - 4.days, description: '' }))
+        time_record_5 = create(:time_record, usual_data.merge({ assigned_date: Date.today - 5.days, spent_time: 0.0 }))
+        time_record_6 = create(:time_record, usual_data.merge({ assigned_date: Date.today - 8.days, spent_time: 0.0 }))
         form = build_form({ approved: true }, period)
         form.valid?
-        dates = [time_record_1.assigned_date, time_record_3.assigned_date]
+        dates = [time_record_1.assigned_date, time_record_3.assigned_date, time_record_4.assigned_date, time_record_5.assigned_date]
         expect(form.dates_of_invalid_time_records).to eq(dates)
       end
 
