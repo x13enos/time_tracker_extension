@@ -12,6 +12,7 @@ en:
   time_locking_periods:
     link_is_expired: "Link is expired."
     has_active_task: "You cannot approve time report until you stop launched tasks"
+    has_inconsistent_data: "You cannot approve time report, data is absent in task(s) for"
   time_records:
     errors:
       cannot_execute_for_blocked_days: "You can't do that because this day was blocked for changes."
@@ -23,6 +24,7 @@ en:
     approve_period: "Approve Period"
     please_approve_period: "Please approve that you have filled your timereport for workspace \"%{workspace}\" on period %{from} - %{to}"
     period_was_succesfully_approved: "Timereport for workspace \"%{workspace}\" on period %{from} - %{to} was successfully approved ✅"
+    period_has_inconsistent_data: "Unfortunately this report has lack of data in task(s) for %{dates}. Please fill that in the app and try to approve this again."
     done: "Done!"
     error: "%{message} ❌"
     you_were_assigned_to_project: "You were assigned to project \"%{project}\" in \"%{workspace}\"."

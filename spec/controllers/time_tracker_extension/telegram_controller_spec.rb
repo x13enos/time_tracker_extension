@@ -62,7 +62,7 @@ module TimeTrackerExtension
       it "should create approve form" do
         allow(User).to receive(:find_by) { current_user }
         allow(current_user).to receive_message_chain(:time_locking_periods, :find_by) { period }
-        expect(TimeTrackerExtension::PeriodApprover).to receive(:new).with(period) { double(perform: true) }
+        expect(TimeTrackerExtension::TimeLockingPeriods::UpdateForm).to receive(:new).with({ approved: true }, period) { double(save: true) }
         execute_callback_query(period)
       end
 
@@ -78,15 +78,17 @@ module TimeTrackerExtension
         execute_callback_query(period)
       end
 
-      it "should return error in case of invalid period" do
+      it "should return error about inconsistent data" do
         allow(User).to receive(:find_by) { current_user }
         allow(current_user).to receive_message_chain(:time_locking_periods, :find_by) { period }
-        approver = TimeTrackerExtension::PeriodApprover.new(period)
-        allow(TimeTrackerExtension::PeriodApprover).to receive(:new) { approver }
-        period.errors.add(:base, "error message")
-        allow(approver).to receive(:perform) { false }
-        message = I18n.t('telegram.error', message: "error message")
-        expect_any_instance_of(TimeTrackerExtension::TelegramController).to receive(:answer_callback_query).with(message)
+        form = TimeTrackerExtension::TimeLockingPeriods::UpdateForm.new({ approved: true }, period)
+        allow(TimeTrackerExtension::TimeLockingPeriods::UpdateForm).to receive(:new) { form }
+        form.errors.add(:base, "error message")
+        form.dates_of_invalid_time_records = ["2021-10-29", "2021-10-30"]
+        allow(form).to receive(:save) { false }
+        links = "[2021-10-29](https://#{ENV['FRONTEND_HOST']}/tasks?date=2021-10-29), [2021-10-30](https://#{ENV['FRONTEND_HOST']}/tasks?date=2021-10-30)"
+        message = I18n.t('telegram.period_has_inconsistent_data', dates: links)
+        expect_any_instance_of(TimeTrackerExtension::TelegramController).to receive(:edit_message).with("text", { text: message, parse_mode: :Markdown })
         execute_callback_query(period)
       end
     end

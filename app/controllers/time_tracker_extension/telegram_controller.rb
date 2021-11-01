@@ -27,12 +27,13 @@ module TimeTrackerExtension
 
     def approve_period_callback_query(period_id = nil, *)
       period = current_user.time_locking_periods.find_by(id: period_id)
-      approver = TimeTrackerExtension::PeriodApprover.new(period)
-      if approver.perform
+      form = TimeTrackerExtension::TimeLockingPeriods::UpdateForm.new({ approved: true }, period)
+      if form.save
         answer_callback_query(t('telegram.done'))
         edit_message("text", { text: t('telegram.period_was_succesfully_approved', workspace: period.workspace.name, from: period.beginning_of_period, to: period.end_of_period) })
       else
-        answer_callback_query(t('telegram.error', message: approver.period.errors[:base].join(', ')))
+        links = form.dates_of_invalid_time_records.map { |d| "[#{d}](https://#{ENV['FRONTEND_HOST']}/tasks?date=#{d})" }.join(', ')
+        edit_message("text", { text: t('telegram.period_has_inconsistent_data', dates: links), parse_mode: :Markdown} )
       end
     end
 
