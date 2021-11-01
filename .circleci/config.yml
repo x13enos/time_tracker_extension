@@ -34,7 +34,7 @@ jobs:
 
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
 
-      - run: sudo apt-get update
+      - run: sudo apt-get update --allow-releaseinfo-change
       - run: sudo apt-get install xvfb libfontconfig wkhtmltopdf
 
       # Database setup
